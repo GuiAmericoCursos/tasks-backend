@@ -3,12 +3,12 @@ pipeline {
     stages {
         stage ('Build Backend') {
             steps {
-                bat ''mvnw  clean package -DskipTests=true'
+                bat 'mvnw  clean package -DskipTests=true'
             }
         }
         stage ('Unit Tests') {
             steps {
-                bat ''mvnw  test'
+                bat 'mvnw  test'
             }
         }
         stage ('Sonar Analysis') {
