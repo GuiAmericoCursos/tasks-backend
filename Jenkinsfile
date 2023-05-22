@@ -37,7 +37,7 @@ pipeline {
         stage ('API Test') {
             steps {
                 dir('api-test') {
-                    git: 'https://github.com/wcaquino/tasks-api-test'
+                    git url: 'https://github.com/wcaquino/tasks-api-test'
                     bat 'mvn test'
                 }
             }
