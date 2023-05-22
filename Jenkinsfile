@@ -38,7 +38,7 @@ pipeline {
             steps {
                 dir('api-test') {
                     git url: 'https://github.com/GuiAmericoCursos/tasks-api-test'
-                    bat 'mvnw test'
+                    bat 'mvn test'
                 }
             }
         }
