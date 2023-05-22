@@ -3,12 +3,12 @@ pipeline {
     stages {
         stage ('Build Backend') {
             steps {
-                bat 'mvnw  clean package -DskipTests=true'
+                bat 'mvnw clean package -DskipTests=true'
             }
         }
         stage ('Unit Tests') {
             steps {
-                bat 'mvnw  test'
+                bat 'mvnw test'
             }
         }
         stage ('Sonar Analysis') {
@@ -50,5 +50,41 @@ pipeline {
                     deploy adapters: [tomcat8(credentialsId: 'TomcatLogin', path: '', url: 'http://localhost:8081/')], contextPath: 'tasks', war: 'target/tasks.war'
                 }
             }
-      }
- }
+        }
+        stage ('Functional Test') {
+            steps {
+                dir('functional-test') {
+                    git credentialsId: 'github_login', url: 'https://github.com/GuiAmericoCursos/tasks-functional-tests'
+                    bat 'mvnw test'
+                }
+            }
+        }
+        stage('Deploy Prod') {
+            steps {
+                bat 'docker-compose build'
+                bat 'docker-compose up -d'
+            }
+        }
+        stage ('Health Check') {
+            steps {
+                sleep(5)
+                dir('functional-test') {
+                    bat 'mvn verify -Dskip.surefire.tests'
+                }
+            }
+        }
+    }
+    post {
+        always {
+            junit allowEmptyResults: true, testResults: 'target/surefire-reports/*.xml, api-test/target/surefire-reports/*.xml, functional-test/target/surefire-reports/*.xml, functional-test/target/failsafe-reports/*.xml'
+            archiveArtifacts artifacts: 'target/tasks-backend.war, frontend/target/tasks.war', onlyIfSuccessful: true
+        }
+        unsuccessful {
+            emailext attachLog: true, body: 'See the attached log below', subject: 'Build $BUILD_NUMBER has failed', to: 'wcaquino+jenkins@gmail.com'
+        }
+        fixed {
+            emailext attachLog: true, body: 'See the attached log below', subject: 'Build is fine!!!', to: 'wcaquino+jenkins@gmail.com'
+        }
+    }
+}
+
