@@ -38,7 +38,7 @@ pipeline {
             steps {
                 dir('api-test') {
                     git: 'https://github.com/GuiAmericoCursos/tasks-api-test'
-                    bat 'mvnw test'
+                    bat 'mvn test'
                 }
             }
         }
@@ -46,7 +46,7 @@ pipeline {
             steps {
                 dir('frontend') {
                     git: 'https://github.com/GuiAmericoCursos/tasks-frontend'
-                    bat 'mvnw clean package'
+                    bat 'mvn clean package'
                     deploy adapters: [tomcat8(credentialsId: 'TomcatLogin', path: '', url: 'http://localhost:8081/')], contextPath: 'tasks', war: 'target/tasks.war'
                 }
             }
@@ -55,7 +55,7 @@ pipeline {
             steps {
                 dir('functional-test') {
                     git: 'https://github.com/GuiAmericoCursos/tasks-functional-tests'
-                    bat 'mvnw test'
+                    bat 'mvn test'
                 }
             }
         }
