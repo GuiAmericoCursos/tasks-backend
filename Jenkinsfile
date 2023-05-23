@@ -34,12 +34,19 @@ pipeline {
                 deploy adapters: [tomcat8(credentialsId: 'TomcatLogin', path: '', url: 'http://localhost:8081/')], contextPath: 'tasks-backend', war: 'target/tasks-backend.war'
             }
         }
-        
         stage ('Deploy Frontend') {
             steps {
                 dir('frontend') {
-                    git credentialsId: 'github_login', url: 'https://github.com/wcaquino/tasks-frontend'
-                    bat 'mvn clean package'
+                    git url: 'https://github.com/wcaquino/tasks-frontend'
+                     withMaven(
+				        maven: 'maven-3', // (1)
+				        mavenLocalRepo: 'C:\Program Files\apache-maven-3.9.2', // (2)
+				        mavenSettingsConfig: 'MAVEN_LOCAL' // (3)
+				    ) {
+				
+				      // Run the maven build
+                	    bat 'mvn clean package'
+				    }
                     deploy adapters: [tomcat8(credentialsId: 'TomcatLogin', path: '', url: 'http://localhost:8001/')], contextPath: 'tasks', war: 'target/tasks.war'
                 }
             }
