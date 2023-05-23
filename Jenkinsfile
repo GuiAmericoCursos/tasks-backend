@@ -40,7 +40,7 @@ pipeline {
                     git url: 'https://github.com/wcaquino/tasks-frontend'
                      withMaven(
 				        maven: 'maven-3', // (1)
-				        mavenLocalRepo: 'C:\Program Files\apache-maven-3.9.2', // (2)
+				        mavenLocalRepo: 'C:/Program Files/apache-maven-3.9.2', // (2)
 				        mavenSettingsConfig: 'MAVEN_LOCAL' // (3)
 				    ) {
 				
