@@ -34,11 +34,13 @@ pipeline {
                 deploy adapters: [tomcat8(credentialsId: 'TomcatLogin', path: '', url: 'http://localhost:8081/')], contextPath: 'tasks-backend', war: 'target/tasks-backend.war'
             }
         }
-        stage ('API Test') {
+        
+        stage ('Deploy Frontend') {
             steps {
-                dir('api-test') {
-                    git url: 'https://github.com/GuiAmericoCursos/tasks-api-test'
-                    bat 'mvn test'
+                dir('frontend') {
+                    git credentialsId: 'github_login', url: 'https://github.com/wcaquino/tasks-frontend'
+                    bat 'mvn clean package'
+                    deploy adapters: [tomcat8(credentialsId: 'TomcatLogin', path: '', url: 'http://localhost:8001/')], contextPath: 'tasks', war: 'target/tasks.war'
                 }
             }
         }
