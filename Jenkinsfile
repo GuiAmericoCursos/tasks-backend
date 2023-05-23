@@ -39,8 +39,7 @@ pipeline {
                 dir('api-test') {
                     git url: 'https://github.com/GuiAmericoCursos/tasks-api-test'
                     withMaven(
-	                    maven: 'maven_3_9_2', // (1)
-				        mavenLocalRepo: 'C/Program Files/apache-maven-3.9.2', // (2)
+				        mavenLocalRepo: 'C/Program Files/apache-maven-3.9.2'
                     ) {
 	                    bat 'mvn test'
                     }
