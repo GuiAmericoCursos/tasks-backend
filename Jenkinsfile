@@ -38,7 +38,9 @@ pipeline {
             steps {
                 dir('api-test') {
                     git url: 'https://github.com/GuiAmericoCursos/tasks-api-test'
-                    bat 'mvn test'
+                    withMaven('MAVEN_LOCAL'){
+	                    bat 'mvn test'
+                    }
                 }
             }
         }
@@ -46,7 +48,9 @@ pipeline {
             steps {
                 dir('frontend') {
                     git url: 'https://github.com/GuiAmericoCursos/tasks-frontend'
-                    bat 'mvn clean package'
+                    withMaven('MAVEN_LOCAL'){
+	                    bat 'mvn clean package'
+                    }
                     deploy adapters: [tomcat8(credentialsId: 'TomcatLogin', path: '', url: 'http://localhost:8081/')], contextPath: 'tasks', war: 'target/tasks.war'
                 }
             }
