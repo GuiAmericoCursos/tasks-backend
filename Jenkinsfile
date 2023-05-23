@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    tools {
+        maven 'Maven 3.9.2'
+    }
     stages {
         stage ('Build Backend') {
             steps {
@@ -39,7 +42,7 @@ pipeline {
                 dir('api-test') {
                     git url: 'https://github.com/GuiAmericoCursos/tasks-api-test'
                     withMaven(
-				        mavenLocalRepo: 'C/Program Files/apache-maven-3.9.2'
+	                    maven: 'maven_3_9_2'
                     ) {
 	                    bat 'mvn test'
                     }
